@@ -84,11 +84,11 @@ jobs:
   # Exercise: Config and Deployment
   configure_infrastructure: 
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.9-alpine3.16
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["0c:55:f7:d7:ad:e3:73:19:0b:e6:c6:46:5c:04:76:94"] # You can get this ID in the section where you registered the SSH Key
+          fingerprints: ["0d:65:9f:de:ba:34:4f:ef:b7:aa:26:d7:a9:d9:3d:ce"] # You can get this ID in the section where you registered the SSH Key
       - run:
           name: Install dependencies
           command: |
@@ -216,8 +216,8 @@ workflows:
       # - download_file:
       #     requires:
       #       - upload_file
-      - create_infrastructure
-      # - configure_infrastructure
+      # - create_infrastructure
+      - configure_infrastructure
       # - create_and_deploy_front_end
       # - promote_to_production:
       #     requires: 
