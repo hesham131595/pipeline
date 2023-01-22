@@ -123,7 +123,7 @@ jobs:
           name: error
           command:  |
             return 1 
-      - command: destroy_environment
+      - destroy_environment
         when: on_fail
   # Exercise: Promote to Production - Job 1 
   # Prerequisite: 
