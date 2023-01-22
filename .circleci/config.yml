@@ -8,7 +8,7 @@ orbs:
   aws-cli: circleci/aws-cli@2.0.3
 # Orchestrate or schedule a set of jobs
 
-# commands:
+commands:
 #   # Exercise: Reusable Job Code
 #   print_pipeline_id:
 #     parameters:
@@ -18,15 +18,14 @@ orbs:
 #       - run: echo << parameters.id >>
 
 #   # Exercise - Rollback
-#   destroy_environment:
-#     steps:
-#       - run:
-#           name: Destroy environment
-#           # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
-#           # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
-#           when: on_fail
-#           command: |
-#             aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
+  destroy_environment:
+    steps:
+      - run:
+          name: Destroy environment
+          # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
+          # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
+          command: |
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
           
 jobs:
   # Exercise: Creating a Simple Workflow
@@ -99,24 +98,30 @@ jobs:
           command: |
             ansible-playbook -i inventory.txt main4.yml
   # Exercise: Smoke Testing
+  # smoke_test:
+  #   docker:
+  #     - image: amazon/aws-cli
+  #   steps:
+  #     - run: apk add --update curl
+  #     - run:
+  #         name: smoke test
+  #         command: |
+  #           URL="https://blog.udacity.com/"
+  #           # Test if website exists
+  #           if curl -s --head ${URL} 
+  #           then
+  #             return 0
+  #           else
+  #             return 1
+  #           fi
+      # - destroy_environment      
   smoke_test:
     docker:
-      - image: alpine:latest
+      - image: amazon/aws-cli
     steps:
-      - run: apk add --update curl
-      - run:
-          name: smoke test
-          command: |
-            URL="https://blog.udacity.com/"
-            # Test if website exists
-            if curl -s --head ${URL} 
-            then
-              return 0
-            else
-              return 1
-            fi
-      # - destroy_environment      
-  
+      - run: return 1 
+      - destroy_environment
+        when: on_fail
   # Exercise: Promote to Production - Job 1 
   # Prerequisite: 
   # 1. An S3 bucket (say `mybucket644752792305`) with a sample index.html created manually in your AWS console. 
@@ -211,13 +216,15 @@ workflows:
     # Run the welcome/run job in its own container
     jobs:
       # - welcome/run
-        - smoke_test
+      - smoke_test:
+          requires:
+           - create_infrastructure 
       # - print_greetings
       # - upload_file
       # - download_file:
       #     requires:
       #       - upload_file
-      # - create_infrastructure
+      - create_infrastructure
       # - configure_infrastructure
       # - create_and_deploy_front_end
       # - promote_to_production:
