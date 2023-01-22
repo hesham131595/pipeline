@@ -123,8 +123,8 @@ jobs:
           name: error
           command:  |
             return 1 
-      - destroy_environment:
-        when: on_fail
+      - command: destroy_environment
+         when: on_fail
   # Exercise: Promote to Production - Job 1 
   # Prerequisite: 
   # 1. An S3 bucket (say `mybucket644752792305`) with a sample index.html created manually in your AWS console. 
