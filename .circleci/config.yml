@@ -189,7 +189,7 @@ jobs:
             aws cloudformation deploy \
             --template-file cloudfront.yml \
             --stack-name production-distro \
-            --parameter-overrides PipelineID="mybucket-mybucket-81cf9bd" 
+            --parameter-overrides PipelineID="mybucket-81cf9bd" 
   # Exercise: Promote to Production - Job 4
   # Destroy the previous production version's S3 bucket and CloudFormation stack. 
   clean_up_old_front_end:
