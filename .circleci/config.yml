@@ -153,7 +153,7 @@ jobs:
             --stack-name stack-create-bucket-${CIRCLE_WORKFLOW_ID:0:7} \
             --parameter-overrides MyBucketName="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
       # Uncomment the step below if yoou wish to upload all contents of the current directory to the S3 bucket
-      # - run: aws s3 sync . s3://mybucket-${CIRCLE_WORKFLOW_ID:0:7} --delete
+      - run: aws s3 sync . s3://mybucket-${CIRCLE_WORKFLOW_ID:0:7} --delete
   
   # Exercise: Promote to Production - Job 2
   # Fetch and save the pipeline ID (bucket ID) responsible for the last release.
@@ -218,17 +218,17 @@ workflows:
     # Run the welcome/run job in its own container
     jobs:
       # - welcome/run
-      - smoke_test:
-          requires:
-           - create_infrastructure 
+      # - smoke_test:
+      #     requires:
+      #      - create_infrastructure 
       # - print_greetings
       # - upload_file
       # - download_file:
       #     requires:
       #       - upload_file
-      - create_infrastructure
+      # - create_infrastructure
       # - configure_infrastructure
-      # - create_and_deploy_front_end
+      - create_and_deploy_front_end
       # - promote_to_production:
       #     requires: 
       #       - create_and_deploy_front_end
